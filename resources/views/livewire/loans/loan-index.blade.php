@@ -1,4 +1,14 @@
-<div class="overflow-x-auto">
+<div>
+    <div class="mb-4 max-w-sm">
+        <x-text-input
+            type="text"
+            class="w-full"
+            placeholder="Buscar por nombre, teléfono o referencia..."
+            wire:model.live.debounce.400ms="search"
+        />
+    </div>
+
+    <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200 text-sm">
         <thead>
             <tr class="text-left text-gray-500">
@@ -51,6 +61,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 
     <div class="mt-4">
         {{ $loans->links() }}

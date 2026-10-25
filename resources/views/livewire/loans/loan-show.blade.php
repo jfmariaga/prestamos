@@ -73,21 +73,33 @@
         <div class="bg-white shadow-sm sm:rounded-lg p-6 max-w-lg">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Registrar abono</h3>
             <form
-                x-on:submit.prevent="
-                    Swal.fire({
-                        title: '¿Registrar este abono?',
-                        text: 'Se aplicará al interés pendiente y luego al capital.',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Sí, registrar',
-                        cancelButtonText: 'Cancelar',
-                    }).then((result) => { if (result.isConfirmed) $wire.registerPayment() })
+                wire:submit="registerPayment"
+                x-data="{ confirmed: false }"
+                x-on:submit="
+                    if (! confirmed) {
+                        $event.preventDefault();
+                        Swal.fire({
+                            title: '¿Registrar este abono?',
+                            text: 'Se aplicará al interés pendiente y luego al capital.',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, registrar',
+                            cancelButtonText: 'Cancelar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                confirmed = true;
+                                $el.requestSubmit();
+                            }
+                        });
+                    } else {
+                        confirmed = false;
+                    }
                 "
                 class="space-y-4"
             >
                 <div>
                     <x-input-label for="amount" value="Monto del abono" />
-                    <x-text-input id="amount" type="number" step="0.01" class="mt-1 block w-full" wire:model="amount" />
+                    <x-money-input id="amount" class="mt-1" wire:model="amount" />
                     <x-input-error :messages="$errors->get('amount')" class="mt-1" />
                 </div>
                 <p class="text-xs text-gray-500">El abono se aplica primero al interés pendiente (${{ number_format($loan->outstanding_interest, 2) }}) y el excedente al capital.</p>

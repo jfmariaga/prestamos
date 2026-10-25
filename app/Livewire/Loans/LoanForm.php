@@ -134,6 +134,17 @@ class LoanForm extends Component
             $outstandingPrincipal = max(round((float) $this->loan->outstanding_principal + ($principal - $oldPrincipal), 2), 0);
             $outstandingInterest = max(round((float) $this->loan->outstanding_interest + ($newInitialInterest - $oldInitialInterest), 2), 0);
 
+            $oldDueDateBaseline = $this->loan->hasCommitmentDate()
+                ? $this->loan->commitment_date
+                : $this->loan->loan_date->copy()->addMonth();
+            $newDueDateBaseline = $commitmentDate ?: $loanDate->copy()->addMonth();
+
+            $dueDateShiftInDays = (int) round(
+                ($newDueDateBaseline->copy()->startOfDay()->timestamp - $oldDueDateBaseline->copy()->startOfDay()->timestamp) / 86400
+            );
+
+            $nextInterestDueDate = $this->loan->next_interest_due_date->copy()->addDays($dueDateShiftInDays);
+
             $this->loan->update([
                 'borrower_id' => $borrower->id,
                 'principal_amount' => $principal,
@@ -143,6 +154,7 @@ class LoanForm extends Component
                 'loan_date' => $loanDate->toDateString(),
                 'commitment_date' => $commitmentDate?->toDateString(),
                 'agreed_interest_amount' => $newAgreedInterestAmount,
+                'next_interest_due_date' => $nextInterestDueDate->toDateString(),
                 'commitment_broken_at' => $this->has_commitment_date ? $this->loan->commitment_broken_at : null,
                 'status' => ($outstandingPrincipal <= 0 && $outstandingInterest <= 0) ? Loan::STATUS_PAID : Loan::STATUS_ACTIVE,
             ]);
