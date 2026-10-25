@@ -44,7 +44,7 @@
     </div>
 
     {{-- Indicadores clave --}}
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
             <div class="text-sm font-medium text-gray-500">Cartera activa (capital)</div>
             <div class="mt-2 text-2xl font-semibold text-gray-900">${{ number_format($capitalPrestado, 2) }}</div>
