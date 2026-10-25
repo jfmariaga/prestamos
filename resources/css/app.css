@@ -1,0 +1,32 @@
+@import 'flatpickr/dist/flatpickr.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.flatpickr-calendar {
+    @apply shadow-lg border border-gray-200 rounded-lg;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+    @apply bg-brand-700 border-brand-700;
+}
+
+.flatpickr-day.today {
+    @apply border-brand-500;
+}
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-weekdays {
+    background: theme('colors.brand.700');
+}
+
+.flatpickr-weekday {
+    @apply bg-brand-700 text-brand-100;
+}
+
+span.flatpickr-weekday {
+    color: theme('colors.brand.100') !important;
+}
