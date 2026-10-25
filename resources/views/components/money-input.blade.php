@@ -17,7 +17,7 @@
             return decPart !== undefined ? formatted + ',' + decPart : formatted;
         },
         onInput(e) {
-            let clean = e.target.value.replace(/\./g, ',').replace(/[^0-9,]/g, '');
+            let clean = e.target.value.replace(/[^0-9,]/g, '');
             let commaIndex = clean.indexOf(',');
             let intPart = commaIndex === -1 ? clean : clean.slice(0, commaIndex);
             let decPart = commaIndex === -1 ? undefined : clean.slice(commaIndex + 1).replace(/,/g, '');
