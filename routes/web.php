@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Loan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +33,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('users', 'users.index')->name('users.index');
     Route::view('users/create', 'users.create')->name('users.create');
+
+    Route::get('reportes/interes-cobrado', function (Request $request) {
+        return view('reports.interest-collected', [
+            'start' => $request->query('start', now()->startOfMonth()->toDateString()),
+            'end' => $request->query('end', now()->endOfMonth()->toDateString()),
+        ]);
+    })->name('reports.interest-collected');
+
+    Route::get('reportes/interes-por-cobrar', function (Request $request) {
+        return view('reports.interest-due', [
+            'start' => $request->query('start', now()->startOfMonth()->toDateString()),
+            'end' => $request->query('end', now()->endOfMonth()->toDateString()),
+        ]);
+    })->name('reports.interest-due');
 });
 
 require __DIR__.'/auth.php';

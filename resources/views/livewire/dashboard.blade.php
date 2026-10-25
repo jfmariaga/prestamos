@@ -19,16 +19,22 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-            <div class="rounded-lg border border-gray-200 p-4">
+            <a
+                href="{{ route('reports.interest-collected', ['start' => $rangeStart, 'end' => $rangeEnd]) }}"
+                class="rounded-lg border border-gray-200 p-4 hover:border-green-300 hover:shadow-sm transition block"
+            >
                 <div class="text-sm font-medium text-gray-500">Interés cobrado en el rango</div>
                 <div class="mt-1 text-2xl font-semibold text-green-700">${{ number_format($interesCobradoRango, 2) }}</div>
-                <div class="text-xs text-gray-400 mt-1">Abonos de interés ya recibidos</div>
-            </div>
-            <div class="rounded-lg border border-gray-200 p-4">
+                <div class="text-xs text-gray-400 mt-1">Abonos de interés ya recibidos · ver detalle</div>
+            </a>
+            <a
+                href="{{ route('reports.interest-due', ['start' => $rangeStart, 'end' => $rangeEnd]) }}"
+                class="rounded-lg border border-gray-200 p-4 hover:border-brand-300 hover:shadow-sm transition block"
+            >
                 <div class="text-sm font-medium text-gray-500">Interés por cobrar que vence en el rango</div>
                 <div class="mt-1 text-2xl font-semibold text-brand-700">${{ number_format($interesPorCobrarRango, 2) }}</div>
-                <div class="text-xs text-gray-400 mt-1">Pendiente, proyectado para ese periodo</div>
-            </div>
+                <div class="text-xs text-gray-400 mt-1">Pendiente, proyectado para ese periodo · ver detalle</div>
+            </a>
         </div>
     </div>
 
