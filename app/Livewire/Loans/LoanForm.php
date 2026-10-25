@@ -27,7 +27,7 @@ class LoanForm extends Component
 
     public function mount(?Loan $loan = null): void
     {
-        if (! $loan) {
+        if (! $loan || ! $loan->exists) {
             $this->loan_date = now()->toDateString();
 
             return;
