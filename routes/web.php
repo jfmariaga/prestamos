@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Loan;
+use App\Models\PersonalLoan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'end' => $request->query('end', now()->endOfMonth()->toDateString()),
         ]);
     })->name('reports.interest-due');
+
+    Route::view('reportes/mora', 'reports.overdue')->name('reports.overdue');
+
+    Route::view('prestamos-personales', 'personal-loans.index')->name('personal-loans.index');
+    Route::view('prestamos-personales/crear', 'personal-loans.create')->name('personal-loans.create');
+    Route::get('prestamos-personales/{personalLoan}/editar', function (PersonalLoan $personalLoan) {
+        abort_unless($personalLoan->user_id === auth()->id(), 403);
+
+        return view('personal-loans.edit', ['personalLoan' => $personalLoan]);
+    })->name('personal-loans.edit');
 });
 
 require __DIR__.'/auth.php';

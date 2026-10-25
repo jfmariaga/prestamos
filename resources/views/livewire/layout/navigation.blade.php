@@ -36,6 +36,9 @@ new class extends Component
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')" wire:navigate>
                         Usuarios
                     </x-nav-link>
+                    <x-nav-link :href="route('personal-loans.index')" :active="request()->routeIs('personal-loans.*')" wire:navigate>
+                        Préstamos personales
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -89,6 +92,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')" wire:navigate>
                 Usuarios
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('personal-loans.index')" :active="request()->routeIs('personal-loans.*')" wire:navigate>
+                Préstamos personales
             </x-responsive-nav-link>
         </div>
 

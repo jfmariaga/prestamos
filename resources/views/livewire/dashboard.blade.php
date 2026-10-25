@@ -49,7 +49,9 @@
             <div class="text-sm font-medium text-gray-500">Interés pendiente total</div>
             <div class="mt-2 text-2xl font-semibold text-gray-900">${{ number_format($interesPendienteTotal, 2) }}</div>
             @if ($interesPendienteEnMora > 0)
-                <div class="text-xs text-red-600 mt-1">${{ number_format($interesPendienteEnMora, 2) }} en mora</div>
+                <a href="{{ route('reports.overdue') }}" class="text-xs text-red-600 hover:text-red-800 hover:underline mt-1 inline-block">
+                    ${{ number_format($interesPendienteEnMora, 2) }} en mora · ver quiénes
+                </a>
             @endif
         </div>
 
