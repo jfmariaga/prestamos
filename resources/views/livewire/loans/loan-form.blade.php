@@ -28,7 +28,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <x-input-label for="principal_amount" value="Valor prestado" />
-                <x-text-input id="principal_amount" type="number" step="0.01" class="mt-1 block w-full" wire:model="principal_amount" />
+                <x-money-input id="principal_amount" class="mt-1" wire:model="principal_amount" />
                 <x-input-error :messages="$errors->get('principal_amount')" class="mt-1" />
             </div>
 
@@ -60,9 +60,14 @@
                     </div>
 
                     <div>
-                        <x-input-label for="agreed_interest_amount" value="Interés pactado para el plazo ($)" />
-                        <x-text-input id="agreed_interest_amount" type="number" step="0.01" class="mt-1 block w-full" wire:model="agreed_interest_amount" />
-                        <x-input-error :messages="$errors->get('agreed_interest_amount')" class="mt-1" />
+                        <x-input-label for="agreed_interest_rate" value="% Interés pactado para el plazo" />
+                        <x-text-input id="agreed_interest_rate" type="number" step="0.01" class="mt-1 block w-full" wire:model.live="agreed_interest_rate" />
+                        <x-input-error :messages="$errors->get('agreed_interest_rate')" class="mt-1" />
+                        @if (! is_null($this->computedAgreedInterestAmount()))
+                            <p class="mt-1 text-xs text-gray-500">
+                                Interés pactado calculado: <span class="font-medium text-gray-700">${{ $this->computedAgreedInterestAmount() }}</span>
+                            </p>
+                        @endif
                     </div>
                 </div>
 
@@ -73,8 +78,8 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>Guardar préstamo</x-primary-button>
-            <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:underline">Cancelar</a>
+            <x-primary-button>{{ $loan ? 'Actualizar préstamo' : 'Guardar préstamo' }}</x-primary-button>
+            <a href="{{ $loan ? route('loans.show', $loan) : route('dashboard') }}" class="text-sm text-gray-600 hover:underline">Cancelar</a>
         </div>
     </form>
 </div>

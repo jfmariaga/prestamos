@@ -10,6 +10,8 @@ use Livewire\Component;
 
 class LoanForm extends Component
 {
+    public ?Loan $loan = null;
+
     public string $borrower_phone = '';
     public string $borrower_name = '';
     public string $borrower_reference = '';
@@ -19,13 +21,33 @@ class LoanForm extends Component
 
     public bool $has_commitment_date = false;
     public string $commitment_date = '';
-    public string $agreed_interest_amount = '';
+    public string $agreed_interest_rate = '';
 
     public ?Borrower $existingBorrower = null;
 
-    public function mount(): void
+    public function mount(?Loan $loan = null): void
     {
-        $this->loan_date = now()->toDateString();
+        if (! $loan) {
+            $this->loan_date = now()->toDateString();
+
+            return;
+        }
+
+        $this->loan = $loan;
+        $this->borrower_phone = $loan->borrower->phone;
+        $this->borrower_name = $loan->borrower->name;
+        $this->borrower_reference = $loan->borrower->reference ?? '';
+        $this->principal_amount = (string) $loan->principal_amount;
+        $this->interest_rate = (string) $loan->interest_rate;
+        $this->loan_date = $loan->loan_date->toDateString();
+        $this->has_commitment_date = $loan->hasCommitmentDate();
+
+        if ($this->has_commitment_date) {
+            $this->commitment_date = $loan->commitment_date->toDateString();
+            $this->agreed_interest_rate = (float) $loan->principal_amount > 0
+                ? (string) round(((float) $loan->agreed_interest_amount / (float) $loan->principal_amount) * 100, 2)
+                : '';
+        }
     }
 
     public function updatedBorrowerPhone(): void
@@ -41,6 +63,17 @@ class LoanForm extends Component
         }
     }
 
+    public function computedAgreedInterestAmount(): ?string
+    {
+        if (! $this->has_commitment_date || $this->principal_amount === '' || $this->agreed_interest_rate === '') {
+            return null;
+        }
+
+        $amount = ((float) $this->principal_amount) * ((float) $this->agreed_interest_rate / 100);
+
+        return number_format($amount, 2);
+    }
+
     protected function rules(): array
     {
         $rules = [
@@ -54,7 +87,7 @@ class LoanForm extends Component
 
         if ($this->has_commitment_date) {
             $rules['commitment_date'] = ['required', 'date', 'after:loan_date'];
-            $rules['agreed_interest_amount'] = ['required', 'numeric', 'min:0'];
+            $rules['agreed_interest_rate'] = ['required', 'numeric', 'min:0'];
         }
 
         return $rules;
@@ -70,16 +103,48 @@ class LoanForm extends Component
 
         if ($this->has_commitment_date) {
             $commitmentDate = Carbon::parse($data['commitment_date']);
-            $outstandingInterest = round((float) $data['agreed_interest_amount'], 2);
+            $agreedRate = round((float) $data['agreed_interest_rate'], 2);
+            $newAgreedInterestAmount = round($principal * ($agreedRate / 100), 2);
         } else {
             $commitmentDate = null;
-            $outstandingInterest = round($principal * ($rate / 100), 2);
+            $newAgreedInterestAmount = null;
         }
+
+        $newInitialInterest = $this->has_commitment_date
+            ? $newAgreedInterestAmount
+            : round($principal * ($rate / 100), 2);
 
         $borrower = Borrower::updateOrCreate(
             ['phone' => $data['borrower_phone']],
             ['name' => $data['borrower_name'], 'reference' => $data['borrower_reference']],
         );
+
+        if ($this->loan) {
+            $oldPrincipal = (float) $this->loan->principal_amount;
+            $oldInitialInterest = $this->loan->hasCommitmentDate()
+                ? (float) $this->loan->agreed_interest_amount
+                : round($oldPrincipal * ((float) $this->loan->interest_rate / 100), 2);
+
+            $outstandingPrincipal = max(round((float) $this->loan->outstanding_principal + ($principal - $oldPrincipal), 2), 0);
+            $outstandingInterest = max(round((float) $this->loan->outstanding_interest + ($newInitialInterest - $oldInitialInterest), 2), 0);
+
+            $this->loan->update([
+                'borrower_id' => $borrower->id,
+                'principal_amount' => $principal,
+                'outstanding_principal' => $outstandingPrincipal,
+                'interest_rate' => $rate,
+                'outstanding_interest' => $outstandingInterest,
+                'loan_date' => $loanDate->toDateString(),
+                'commitment_date' => $commitmentDate?->toDateString(),
+                'agreed_interest_amount' => $newAgreedInterestAmount,
+                'commitment_broken_at' => $this->has_commitment_date ? $this->loan->commitment_broken_at : null,
+                'status' => ($outstandingPrincipal <= 0 && $outstandingInterest <= 0) ? Loan::STATUS_PAID : Loan::STATUS_ACTIVE,
+            ]);
+
+            session()->flash('success', 'Préstamo actualizado correctamente.');
+
+            return redirect()->route('loans.show', $this->loan);
+        }
 
         $loan = Loan::create([
             'user_id' => Auth::id(),
@@ -87,10 +152,10 @@ class LoanForm extends Component
             'principal_amount' => $principal,
             'outstanding_principal' => $principal,
             'interest_rate' => $rate,
-            'outstanding_interest' => $outstandingInterest,
+            'outstanding_interest' => $newInitialInterest,
             'loan_date' => $loanDate->toDateString(),
             'commitment_date' => $commitmentDate?->toDateString(),
-            'agreed_interest_amount' => $this->has_commitment_date ? round((float) $data['agreed_interest_amount'], 2) : null,
+            'agreed_interest_amount' => $newAgreedInterestAmount,
             'next_interest_due_date' => $commitmentDate
                 ? $commitmentDate->toDateString()
                 : $loanDate->copy()->addMonth()->toDateString(),

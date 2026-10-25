@@ -17,6 +17,9 @@ Route::view('profile', 'profile')
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('loans/create', 'loans.create')->name('loans.create');
+    Route::get('loans/{loan}/edit', function (Loan $loan) {
+        return view('loans.edit', ['loan' => $loan]);
+    })->name('loans.edit');
     Route::get('loans/{loan}', function (Loan $loan) {
         return view('loans.show', ['loan' => $loan]);
     })->name('loans.show');

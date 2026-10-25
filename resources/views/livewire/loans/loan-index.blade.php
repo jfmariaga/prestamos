@@ -39,6 +39,7 @@
                     </td>
                     <td class="px-3 py-2">
                         <a href="{{ route('loans.show', $loan) }}" class="text-brand-600 hover:text-brand-800 hover:underline">Ver</a>
+                        <a href="{{ route('loans.edit', $loan) }}" class="ms-2 text-brand-600 hover:text-brand-800 hover:underline">Editar</a>
                     </td>
                 </tr>
             @empty
