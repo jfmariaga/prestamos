@@ -134,16 +134,7 @@ class LoanForm extends Component
             $outstandingPrincipal = max(round((float) $this->loan->outstanding_principal + ($principal - $oldPrincipal), 2), 0);
             $outstandingInterest = max(round((float) $this->loan->outstanding_interest + ($newInitialInterest - $oldInitialInterest), 2), 0);
 
-            $oldDueDateBaseline = $this->loan->hasCommitmentDate()
-                ? $this->loan->commitment_date
-                : $this->loan->loan_date->copy()->addMonth();
-            $newDueDateBaseline = $commitmentDate ?: $loanDate->copy()->addMonth();
-
-            $dueDateShiftInDays = (int) round(
-                ($newDueDateBaseline->copy()->startOfDay()->timestamp - $oldDueDateBaseline->copy()->startOfDay()->timestamp) / 86400
-            );
-
-            $nextInterestDueDate = $this->loan->next_interest_due_date->copy()->addDays($dueDateShiftInDays);
+            $nextInterestDueDate = $commitmentDate ?: $loanDate->copy()->addMonth();
 
             $this->loan->update([
                 'borrower_id' => $borrower->id,
