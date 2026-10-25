@@ -32,6 +32,8 @@ class LoanShow extends Component
 
         $this->amount = '';
         $this->loan->refresh();
+
+        $this->dispatch('notify', message: 'Pago registrado correctamente.');
     }
 
     public function render()

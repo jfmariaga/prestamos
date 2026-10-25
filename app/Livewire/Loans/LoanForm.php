@@ -97,6 +97,8 @@ class LoanForm extends Component
             'status' => Loan::STATUS_ACTIVE,
         ]);
 
+        session()->flash('success', 'Préstamo creado correctamente.');
+
         return redirect()->route('loans.show', $loan);
     }
 

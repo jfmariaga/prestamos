@@ -38,6 +38,8 @@ class UserForm extends Component
 
         $user->forceFill(['email_verified_at' => now()])->save();
 
+        session()->flash('success', 'Usuario creado correctamente.');
+
         return redirect()->route('users.index');
     }
 
