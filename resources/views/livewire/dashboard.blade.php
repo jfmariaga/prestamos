@@ -39,7 +39,13 @@
     </div>
 
     {{-- Indicadores clave --}}
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+            <div class="text-sm font-medium text-gray-500">Saldo disponible para prestar</div>
+            <div class="mt-2 text-2xl font-semibold text-gray-900">${{ number_format($saldoDisponibleParaPrestar, 2) }}</div>
+            <div class="text-xs text-gray-400 mt-1">Capital recuperado por abonos</div>
+        </div>
+
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
             <div class="text-sm font-medium text-gray-500">Cartera activa (capital)</div>
             <div class="mt-2 text-2xl font-semibold text-gray-900">${{ number_format($capitalPrestado, 2) }}</div>

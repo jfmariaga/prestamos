@@ -9,6 +9,9 @@
                 @if ($loan->hasBrokenCommitment())
                     <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">Incumplió acuerdo</span>
                 @endif
+                @if ($loan->isOverdue())
+                    <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">En mora</span>
+                @endif
                 @if ($loan->status === 'paid')
                     <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">Pagado</span>
                 @else
@@ -52,7 +55,12 @@
             </div>
             <div>
                 <div class="text-gray-500">{{ $loan->hasCommitmentDate() && ! $loan->hasBrokenCommitment() ? 'Fecha de compromiso' : 'Próximo pago de interés' }}</div>
-                <div class="font-medium">{{ $loan->next_interest_due_date->format('d/m/Y') }}</div>
+                <div @class(['font-medium', 'text-red-700' => $loan->isOverdue()])>
+                    {{ $loan->next_interest_due_date->format('d/m/Y') }}
+                    @if ($loan->isOverdue())
+                        <span class="text-xs text-red-600">({{ $loan->next_interest_due_date->diffInDays(now()) }} días en mora)</span>
+                    @endif
+                </div>
             </div>
             @if ($loan->hasCommitmentDate())
                 <div>

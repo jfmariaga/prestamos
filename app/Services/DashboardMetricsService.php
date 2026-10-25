@@ -17,6 +17,7 @@ class DashboardMetricsService
         $overdueLoansCount = $this->overdueLoansQuery()->count();
 
         return [
+            'saldoDisponibleParaPrestar' => (float) LoanPayment::query()->sum('principal_amount'),
             'capitalPrestado' => (float) Loan::query()->where('status', Loan::STATUS_ACTIVE)->sum('outstanding_principal'),
             'interesPendienteTotal' => (float) Loan::query()->where('status', Loan::STATUS_ACTIVE)->sum('outstanding_interest'),
             'interesPendienteEnMora' => (float) $this->overdueLoansQuery()->sum('outstanding_interest'),

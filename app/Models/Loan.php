@@ -76,6 +76,11 @@ class Loan extends Model
         return $this->commitment_broken_at !== null;
     }
 
+    public function isOverdue(): bool
+    {
+        return $this->isActive() && $this->next_interest_due_date->lt(today());
+    }
+
     public function totalOutstanding(): float
     {
         return (float) $this->outstanding_principal + (float) $this->outstanding_interest;
