@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+        <div class="grid gap-3 mt-6" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
             <a
                 href="{{ route('reports.interest-collected', ['start' => $rangeStart, 'end' => $rangeEnd]) }}"
                 class="rounded-lg border border-gray-200 p-3 hover:border-green-300 hover:shadow-sm transition block"
@@ -44,7 +44,7 @@
     </div>
 
     {{-- Indicadores clave --}}
-    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div class="grid gap-3" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
             <div class="text-xs font-medium text-gray-500">Cartera activa (capital)</div>
             <div class="mt-1 text-lg font-semibold text-gray-900">${{ number_format($capitalPrestado, 2) }}</div>
