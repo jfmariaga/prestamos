@@ -3,7 +3,9 @@
         <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h3 class="text-lg font-medium text-gray-900">{{ $loan->borrower->name }}</h3>
             <div class="flex items-center gap-2">
-                <a href="{{ route('loans.edit', $loan) }}" class="text-sm text-brand-600 hover:text-brand-800 hover:underline">Editar</a>
+                @if ($payments->isEmpty())
+                    <a href="{{ route('loans.edit', $loan) }}" class="text-sm text-brand-600 hover:text-brand-800 hover:underline">Editar</a>
+                @endif
                 @if ($loan->hasBrokenCommitment())
                     <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">Incumplió acuerdo</span>
                 @endif

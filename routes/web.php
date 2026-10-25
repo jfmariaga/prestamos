@@ -18,6 +18,12 @@ Route::view('profile', 'profile')
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('loans/create', 'loans.create')->name('loans.create');
     Route::get('loans/{loan}/edit', function (Loan $loan) {
+        if ($loan->payments()->exists()) {
+            session()->flash('error', 'No se puede editar un préstamo que ya tiene abonos registrados.');
+
+            return redirect()->route('loans.show', $loan);
+        }
+
         return view('loans.edit', ['loan' => $loan]);
     })->name('loans.edit');
     Route::get('loans/{loan}', function (Loan $loan) {

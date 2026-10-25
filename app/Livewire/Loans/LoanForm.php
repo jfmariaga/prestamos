@@ -95,6 +95,12 @@ class LoanForm extends Component
 
     public function save()
     {
+        if ($this->loan && $this->loan->payments()->exists()) {
+            session()->flash('error', 'No se puede editar un préstamo que ya tiene abonos registrados.');
+
+            return redirect()->route('loans.show', $this->loan);
+        }
+
         $data = $this->validate();
 
         $principal = (float) $data['principal_amount'];

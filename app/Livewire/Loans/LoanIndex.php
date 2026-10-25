@@ -14,6 +14,7 @@ class LoanIndex extends Component
     {
         $loans = Loan::query()
             ->with(['user', 'borrower'])
+            ->withCount('payments')
             ->orderByDesc('loan_date')
             ->paginate(10);
 
