@@ -18,41 +18,41 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
             <a
                 href="{{ route('reports.interest-collected', ['start' => $rangeStart, 'end' => $rangeEnd]) }}"
-                class="rounded-lg border border-gray-200 p-3 hover:border-green-300 hover:shadow-sm transition block"
+                class="rounded-lg border border-gray-200 p-4 hover:border-green-300 hover:shadow-sm transition block"
             >
-                <div class="text-xs font-medium text-gray-500">Interés cobrado en el rango</div>
-                <div class="mt-1 text-lg font-semibold text-green-700">${{ number_format($interesCobradoRango, 2) }}</div>
+                <div class="text-sm font-medium text-gray-500">Interés cobrado en el rango</div>
+                <div class="mt-1 text-xl font-semibold text-green-700">${{ number_format($interesCobradoRango, 2) }}</div>
                 <div class="text-xs text-gray-400 mt-1">Abonos de interés ya recibidos · ver detalle</div>
             </a>
             <a
                 href="{{ route('reports.interest-due', ['start' => $rangeStart, 'end' => $rangeEnd]) }}"
-                class="rounded-lg border border-gray-200 p-3 hover:border-brand-300 hover:shadow-sm transition block"
+                class="rounded-lg border border-gray-200 p-4 hover:border-brand-300 hover:shadow-sm transition block"
             >
-                <div class="text-xs font-medium text-gray-500">Interés por cobrar que vence en el rango</div>
-                <div class="mt-1 text-lg font-semibold text-brand-700">${{ number_format($interesPorCobrarRango, 2) }}</div>
+                <div class="text-sm font-medium text-gray-500">Interés por cobrar que vence en el rango</div>
+                <div class="mt-1 text-xl font-semibold text-brand-700">${{ number_format($interesPorCobrarRango, 2) }}</div>
                 <div class="text-xs text-gray-400 mt-1">Pendiente, proyectado para ese periodo · ver detalle</div>
             </a>
-            <div class="rounded-lg border border-gray-200 p-3">
-                <div class="text-xs font-medium text-gray-500">Saldo disponible para prestar</div>
-                <div class="mt-1 text-lg font-semibold text-gray-900">${{ number_format($saldoDisponibleParaPrestar, 2) }}</div>
+            <div class="rounded-lg border border-gray-200 p-4">
+                <div class="text-sm font-medium text-gray-500">Saldo disponible para prestar</div>
+                <div class="mt-1 text-xl font-semibold text-gray-900">${{ number_format($saldoDisponibleParaPrestar, 2) }}</div>
                 <div class="text-xs text-gray-400 mt-1">Capital recuperado por abonos</div>
             </div>
         </div>
     </div>
 
     {{-- Indicadores clave --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
-            <div class="text-xs font-medium text-gray-500">Cartera activa (capital)</div>
-            <div class="mt-1 text-lg font-semibold text-gray-900">${{ number_format($capitalPrestado, 2) }}</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="text-sm font-medium text-gray-500">Cartera activa (capital)</div>
+            <div class="mt-1 text-xl font-semibold text-gray-900">${{ number_format($capitalPrestado, 2) }}</div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
-            <div class="text-xs font-medium text-gray-500">Interés pendiente total</div>
-            <div class="mt-1 text-lg font-semibold text-gray-900">${{ number_format($interesPendienteTotal, 2) }}</div>
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="text-sm font-medium text-gray-500">Interés pendiente total</div>
+            <div class="mt-1 text-xl font-semibold text-gray-900">${{ number_format($interesPendienteTotal, 2) }}</div>
             @if ($interesPendienteEnMora > 0)
                 <a href="{{ route('reports.overdue') }}" class="text-xs text-red-600 hover:text-red-800 hover:underline mt-1 inline-block">
                     ${{ number_format($interesPendienteEnMora, 2) }} en mora · ver quiénes
@@ -60,11 +60,11 @@
             @endif
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
-            <div class="text-xs font-medium text-gray-500">Tasa de morosidad</div>
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="text-sm font-medium text-gray-500">Tasa de morosidad</div>
             <div class="mt-1 flex items-baseline gap-2">
                 <span @class([
-                    'text-lg font-semibold',
+                    'text-xl font-semibold',
                     'text-green-700' => $tasaMorosidad < 10,
                     'text-yellow-700' => $tasaMorosidad >= 10 && $tasaMorosidad < 25,
                     'text-red-700' => $tasaMorosidad >= 25,
@@ -73,9 +73,9 @@
             <div class="text-xs text-gray-400 mt-1">{{ $prestamosEnMora }} de {{ $totalPrestamosActivos }} préstamos activos</div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3">
-            <div class="text-xs font-medium text-gray-500">Tasa promedio ponderada</div>
-            <div class="mt-1 text-lg font-semibold text-gray-900">{{ rtrim(rtrim(number_format($tasaPromedioPonderada, 2), '0'), '.') }}%</div>
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="text-sm font-medium text-gray-500">Tasa promedio ponderada</div>
+            <div class="mt-1 text-xl font-semibold text-gray-900">{{ rtrim(rtrim(number_format($tasaPromedioPonderada, 2), '0'), '.') }}%</div>
             <div class="text-xs text-gray-400 mt-1">Sobre la cartera activa</div>
         </div>
     </div>
